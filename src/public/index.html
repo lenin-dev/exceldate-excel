@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar y Descargar Archivo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        input {
+            margin: 15px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Convertir un Archivo .xlsx a .json</h2>
+        <div class="input-group">
+            <form id="columnas">
+                <label for="colm">Escriba el nombre de las columnas que quiere obtener del excel</label>
+                <input type="text" id="text_columna" placeholder="Enter para agregar" required>
+            </form>
+            <div>
+                <ol id="lista_colm">
+                </ol>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="fileInput">Selecciona un archivo:</label>
+            <input type="file" id="fileInput" name="fileInput">
+            <a href="#" id="descargar">
+                <button>Descargar Archivo JSON</button>
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const descargar = document.getElementById('descargar');
+        const form = document.getElementById('columnas');
+        const text_columna = document.getElementById('text_columna');
+        const lista_colm = document.getElementById('lista_colm');
+        var lista_colums = [];
+        const allowedTypes = [
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.ms-excel'
+        ];
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const li = document.createElement('li');
+            li.textContent = text_columna.value.trim();
+            lista_colm.appendChild(li);
+            lista_colums.push(text_columna.value.trim());
+            text_columna.value = '';
+        });
+
+        descargar.addEventListener('click', function(e) {
+            e.preventDefault();
+            const file = fileInput.files[0];
+            if (!file) {
+                Swal.fire({
+                    position: "top-center",
+                    icon: "question",
+                    title: "Por favor, selecciona un archivo.",
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            }
+            if (!allowedTypes.includes(file.type)) {
+                Swal.fire({
+                    position: "top-center",
+                    icon: "error",
+                    title: "Tipo de archivo no permitido. Solo se permiten archivos Excel (.xlsx, .xls).",
+                    showConfirmButton: true,
+                    timer: 5000
+                });
+            } else {
+                const formData = new FormData();
+                formData.append('archivoExcel', file);   
+            }
+            
+        });
+    </script>
+
+</body>
+</html>
